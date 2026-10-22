@@ -1,0 +1,14 @@
+[datamodel]
+id = "devproject.card"
+version = 1
+label = "Card"
+description = "One thing to do on a project's board."
+scopes = ["personal"]
+title = "title"
+ordered_within = ["project", "lane"]
+
+[fields]
+project = { kind = "link", to = "project", required = true, indexed = true, on_delete = "cascade" }
+title = { kind = "string", required = true }
+body = { kind = "markdown", default = "" }
+lane = { kind = "enum", values = ["todo", "doing", "done"], labels = ["To Do", "Doing", "Done"], default = "todo", indexed = true }

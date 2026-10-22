@@ -1,0 +1,74 @@
+[quill]
+id = "devproject"
+name = "DevProject"
+version = "1.0.0"
+summary = "Your software projects: the repository, notes, a board, and the .env secrets on every machine."
+category = "developer"
+icon = "code"
+publisher = "Cloudmorrow"
+license = "AGPL-3.0-or-later"
+features = [
+  "A project per repository: its git URL, its notes, its secrets",
+  "`cm devproject init` in a folder makes it a project and reads every .env file into its vault",
+  "`cm devproject update` pulls the code and writes the .env files back; `clone` does it on a new machine",
+  "One environment per file: .env.prod is prod, .env is local, and each is written back to the file it came from",
+  "A board per project: To Do, Doing, Done",
+  "The same on the phone, the web app and the terminal: import and export .env files there too",
+]
+
+[uses]
+datamodels = ["project", "secret"]
+
+# A project is Cloudmorrow's own: these are what a developer's needs besides.
+[[extends]]
+model = "project"
+[extends.fields]
+repo = { kind = "url", label = "Repository", description = "Where its code is: the git URL it is cloned from" }
+vault = { kind = "string", indexed = true, label = "Vault", description = "The vault its secrets are kept in; its name when empty" }
+env_files = { kind = "json", label = "Env files", description = "Which .env file each environment was read from" }
+
+# The projects. Binding `vault` (and `repo`, `env_files`) makes the list one
+# of projects: `cm devproject init`, `update`, `clone` and `secrets` on the
+# command line, the same keys in the terminal, and the environments on a
+# project's sheet in the web app.
+[[screens]]
+id = "projects"
+kit = "list"
+label = "Projects"
+model = "project"
+title = "name"
+subtitle = "devproject.repo"
+vault = "devproject.vault"
+repo = "devproject.repo"
+env_files = "devproject.env_files"
+fields = ["name", "devproject.repo", "status", "description", "devproject.vault"]
+
+# A board per project.
+[[screens]]
+id = "board"
+kit = "board"
+label = "Board"
+model = "devproject.card"
+group = "project"
+lane = "lane"
+title = "title"
+body = "body"
+done = "done"
+
+# The secrets, by project (a vault) and environment, hidden until asked for.
+# A list of secrets gets Import .env and Export .env on every surface.
+[[screens]]
+id = "secrets"
+kit = "list"
+label = "Project secrets"
+model = "secret"
+title = "key"
+subtitle = "value"
+group = "vault"
+subgroup = "environment"
+fields = ["key", "value", "vault", "environment"]
+
+# The vaults are the core's, but Secrets is how a server says it has them:
+# installing DevProject installs Secrets first.
+[requires]
+quills = ["secrets"]
