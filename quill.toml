@@ -1,7 +1,7 @@
 [quill]
 id = "devproject"
 name = "DevProject"
-version = "1.0.0"
+version = "1.1.0"
 summary = "Your software projects: the repository, notes, a board, and the .env secrets on every machine."
 category = "developer"
 icon = "code"
@@ -33,6 +33,7 @@ env_files = { kind = "json", label = "Env files", description = "Which .env file
 # project's sheet in the web app.
 [[screens]]
 id = "projects"
+icon = "folder"
 kit = "list"
 label = "Projects"
 model = "project"
@@ -46,6 +47,7 @@ fields = ["name", "devproject.repo", "status", "description", "devproject.vault"
 # A board per project.
 [[screens]]
 id = "board"
+icon = "list-lines"
 kit = "board"
 label = "Board"
 model = "devproject.card"
@@ -59,6 +61,7 @@ done = "done"
 # A list of secrets gets Import .env and Export .env on every surface.
 [[screens]]
 id = "secrets"
+icon = "key"
 kit = "list"
 label = "Project secrets"
 model = "secret"
